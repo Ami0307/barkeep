@@ -9,12 +9,20 @@ const turn = atom({ plugin: 'barkeep', key: 'turn' } as const, null)
 const session = atom({ plugin: 'barkeep', key: 'session' } as const, null)
 const isCollapsed = atom({ plugin: 'barkeep', key: 'isCollapsed' } as const, false)
 
-// The system language: locale variables first, then macOS's preferred language list.
+const readEnv = async ($: EngineInterface, read: () => Promise<string | undefined>) => {
+  try {
+    return await read()
+  } catch {
+    return undefined
+  }
+}
+
+// The system language: locale variables first, then macOS's preferred language list; English when neither answers.
 const detectLang = async ($: EngineInterface): Promise<Lang> => {
   const fromEnv =
-    fromLocale(await $.env.get('LC_ALL')) ??
-    fromLocale(await $.env.get('LC_MESSAGES')) ??
-    fromLocale(await $.env.get('LANG'))
+    fromLocale(await readEnv($, () => $.env.get('LC_ALL'))) ??
+    fromLocale(await readEnv($, () => $.env.get('LC_MESSAGES'))) ??
+    fromLocale(await readEnv($, () => $.env.get('LANG')))
   if (fromEnv !== undefined) {
     return fromEnv
   }
@@ -76,33 +84,46 @@ export const register: Register = (on, options) => {
   })
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
-    const t = await read($, turn)
-    const s = await read($, session)
-
-    if (e.props.hasSurvey || t === null || s === null) {
+    if (e.props.hasSurvey) {
       return next(e)
     }
+
+    // Draw above whatever the plugins beneath and the engine draw, so other bands still show.
+    const below = await next(e)
+    const t = await read($, turn)
+    const s = await read($, session)
 
     lang ??= detectLang($)
     const L = LABELS[await lang]
     const { Box, Button, Text } = $.ui.resolve(e)
+    const stack = (row: JSX.Element) => (
+      <Box flexDirection="column">
+        {row}
+        {below}
+      </Box>
+    )
+
+    if (t === null || s === null) {
+      return stack(<Text dimColor>barkeep · {L.waiting}</Text>)
+    }
+
     const tRate = hitRate(t)
     const sRate = hitRate(s)
     const label = e.props.isWorking ? L.turn : L.lastTurn
 
     if (await read($, isCollapsed)) {
-      return (
+      return stack(
         <Box flexDirection="row" columnGap={1} alignItems="center">
           <Button key="toggle" label="▸" plain dimColor onPress={() => update($, isCollapsed, () => false)} />
           <Text dimColor>{label}</Text>
           <Text bold tabular>{fmtSpeed(speed(t))}</Text>
           <Text dimColor>·</Text>
           <Text bold tabular color={rateColor(tRate)}>{fmtRate(tRate)}</Text>
-        </Box>
+        </Box>,
       )
     }
 
-    return (
+    return stack(
       <Box flexDirection="row" columnGap={1} alignItems="flex-start">
         <Button key="toggle" label="▾" plain dimColor onPress={() => update($, isCollapsed, () => true)} />
         <Box flexDirection="row" flexWrap="wrap" columnGap={2} flexShrink={1}>
@@ -123,7 +144,7 @@ export const register: Register = (on, options) => {
             <Text dimColor tabular>· {L.requests(s.steps)} · {L.output} {fmtTokens(s.outputTokens)}</Text>
           </Box>
         </Box>
-      </Box>
+      </Box>,
     )
   })
 }

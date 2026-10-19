@@ -40,6 +40,7 @@ test('labels follow the system language', async () => {
   expect(fromLocale('')).toBe(undefined)
   expect(firstAppleLanguage('(\n    "zh-Hans-CN",\n    "en-US"\n)\n')).toBe('zh-Hans-CN')
   expect(firstAppleLanguage('(\n    en,\n    fr\n)\n')).toBe('en')
+  for (const l of Object.values(LABELS)) expect(l.waiting.length > 0).toBe(true)
   expect(LABELS.en.requests(1)).toBe('1 request')
   expect(LABELS.en.requests(3)).toBe('3 requests')
   expect(LABELS.ru.requests(1)).toBe('1 запрос')
@@ -48,14 +49,26 @@ test('labels follow the system language', async () => {
   expect(LABELS.ru.requests(21)).toBe('21 запрос')
 })
 
-test('before any request the band stays out of the way', async ($, on) => {
+test('before any request it says it is waiting, and keeps what is drawn beneath', { options: { language: 'en' } }, async ($, on) => {
   on('ui.render', ($, e) => {
-    const { Box } = $.ui.resolve(e)
-    return <Box key="engine" />
+    const { Text } = $.ui.resolve(e)
+    return <Text key="beneath">another band</Text>
   })
   for (const surface of ['terminal', 'desktop'] as const) {
     const ui = await $.ui.mount({ plugin: 'barkeep', surface, ...BAND })
     expect(await ui.find({ type: 'Text', text: /tok\/s/ })).toBeUndefined()
+    expect(await ui.find({ type: 'Text', text: /waiting for the first request/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /another band/ })).toBeDefined()
     await ui.unmount()
   }
+})
+
+test('labels still draw when the host cannot tell the system language', async ($, on) => {
+  on('ui.render', ($, e) => {
+    const { Box } = $.ui.resolve(e)
+    return <Box key="beneath" />
+  })
+  const ui = await $.ui.mount({ plugin: 'barkeep', surface: 'desktop', ...BAND })
+  expect(await ui.find({ type: 'Text', text: /waiting for the first request/ })).toBeDefined()
+  await ui.unmount()
 })

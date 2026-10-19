@@ -14,7 +14,9 @@ barkeep extends Claude Code's status area with the readings it leaves out. Claud
 - **Last turn / This turn**: every request since your last message. The numbers update live while Claude is working.
 - **Session**: running totals for the session. `/clear` resets them.
 - Only requests in the main conversation are counted, not subagents.
-- Click `▾` to collapse the band to one short line, and `▸` to expand it again. The band stays hidden until the first request finishes.
+- Click `▾` to collapse the band to one short line, and `▸` to expand it again.
+- Until the first request of a session finishes, the band shows a single dim line saying it is waiting.
+- barkeep draws its line above whatever other plugins draw in the same place, so it can be used alongside other status bands.
 
 barkeep draws in the terminal and in the Code tab of the Claude desktop app.
 

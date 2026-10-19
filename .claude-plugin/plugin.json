@@ -1,6 +1,6 @@
 {
   "name": "barkeep",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Extends Claude Code's status area with what it leaves out: output speed (tok/s), time to first token and prompt-cache hit rate, for the current turn and the whole session.",
   "author": {
     "name": "Ami0307",

@@ -10,6 +10,7 @@ export type Labels = {
   cache: string
   requests: (n: number) => string
   output: string
+  waiting: string
 }
 
 const russianRequests = (n: number) => {
@@ -30,6 +31,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: 'cache',
     requests: n => `${n} ${n === 1 ? 'request' : 'requests'}`,
     output: 'out',
+    waiting: 'waiting for the first request',
   },
   'zh-Hans': {
     turn: '本轮',
@@ -39,6 +41,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: '缓存',
     requests: n => `${n} 次请求`,
     output: '输出',
+    waiting: '等待第一次请求',
   },
   'zh-Hant': {
     turn: '本輪',
@@ -48,6 +51,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: '快取',
     requests: n => `${n} 次請求`,
     output: '輸出',
+    waiting: '等待第一次請求',
   },
   ja: {
     turn: '今回',
@@ -57,6 +61,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: 'キャッシュ',
     requests: n => `${n} 件のリクエスト`,
     output: '出力',
+    waiting: '最初のリクエストを待っています',
   },
   ko: {
     turn: '이번 턴',
@@ -66,6 +71,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: '캐시',
     requests: n => `요청 ${n}회`,
     output: '출력',
+    waiting: '첫 요청을 기다리는 중',
   },
   es: {
     turn: 'Este turno',
@@ -75,6 +81,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: 'caché',
     requests: n => `${n} ${n === 1 ? 'solicitud' : 'solicitudes'}`,
     output: 'salida',
+    waiting: 'esperando la primera solicitud',
   },
   fr: {
     turn: 'Ce tour',
@@ -84,6 +91,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: 'cache',
     requests: n => `${n} ${n <= 1 ? 'requête' : 'requêtes'}`,
     output: 'sortie',
+    waiting: 'en attente de la première requête',
   },
   de: {
     turn: 'Diese Runde',
@@ -93,6 +101,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: 'Cache',
     requests: n => `${n} ${n === 1 ? 'Anfrage' : 'Anfragen'}`,
     output: 'Ausgabe',
+    waiting: 'warte auf die erste Anfrage',
   },
   pt: {
     turn: 'Este turno',
@@ -102,6 +111,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: 'cache',
     requests: n => `${n} ${n === 1 ? 'solicitação' : 'solicitações'}`,
     output: 'saída',
+    waiting: 'aguardando a primeira solicitação',
   },
   it: {
     turn: 'Questo turno',
@@ -111,6 +121,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: 'cache',
     requests: n => `${n} ${n === 1 ? 'richiesta' : 'richieste'}`,
     output: 'output',
+    waiting: 'in attesa della prima richiesta',
   },
   ru: {
     turn: 'Этот ход',
@@ -120,6 +131,7 @@ export const LABELS: Record<Lang, Labels> = {
     cache: 'кэш',
     requests: russianRequests,
     output: 'вывод',
+    waiting: 'ожидание первого запроса',
   },
 }
 
