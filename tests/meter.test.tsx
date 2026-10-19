@@ -45,7 +45,7 @@ test('before any request the band stays out of the way', async ($, on) => {
     return <Box key="engine" />
   })
   for (const surface of ['terminal', 'desktop'] as const) {
-    const ui = await $.ui.mount({ plugin: 'tokscope', surface, ...BAND })
+    const ui = await $.ui.mount({ plugin: 'barkeep', surface, ...BAND })
     expect(await ui.find({ type: 'Text', text: /tok\/s/ })).toBeUndefined()
     await ui.unmount()
   }

@@ -14,6 +14,6 @@ export type Stats = {
 
 declare module 'claude-code' {
   interface PluginState {
-    'tokscope': { turn: Stats | null; session: Stats | null; isCollapsed: boolean }
+    'barkeep': { turn: Stats | null; session: Stats | null; isCollapsed: boolean }
   }
 }

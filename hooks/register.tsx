@@ -5,9 +5,9 @@ import { firstAppleLanguage, fromLocale, LABELS } from './i18n'
 import type { Lang } from './i18n'
 import { add, empty, fmtRate, fmtSeconds, fmtSpeed, fmtTokens, hitRate, rateColor, speed } from './stats'
 
-const turn = atom({ plugin: 'tokscope', key: 'turn' } as const, null)
-const session = atom({ plugin: 'tokscope', key: 'session' } as const, null)
-const isCollapsed = atom({ plugin: 'tokscope', key: 'isCollapsed' } as const, false)
+const turn = atom({ plugin: 'barkeep', key: 'turn' } as const, null)
+const session = atom({ plugin: 'barkeep', key: 'session' } as const, null)
+const isCollapsed = atom({ plugin: 'barkeep', key: 'isCollapsed' } as const, false)
 
 // The system language: locale variables first, then macOS's preferred language list.
 const detectLang = async ($: EngineInterface): Promise<Lang> => {

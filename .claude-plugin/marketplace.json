@@ -2,5 +2,5 @@
   "name": "ami-mods",
   "description": "Ami0307's Claude Code mods.",
   "owner": { "name": "Ami0307" },
-  "plugins": [{ "name": "tokscope", "source": "./" }]
+  "plugins": [{ "name": "barkeep", "source": "./" }]
 }

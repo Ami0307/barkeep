@@ -1,12 +1,22 @@
 {
-  "name": "tokscope",
-  "version": "0.2.0",
-  "description": "One line above the prompt with output speed (tok/s), time to first token and prompt-cache hit rate, for the current turn and the whole session.",
-  "author": { "name": "Ami0307", "url": "https://github.com/Ami0307" },
-  "homepage": "https://github.com/Ami0307/tokscope",
-  "repository": "https://github.com/Ami0307/tokscope",
+  "name": "barkeep",
+  "version": "0.3.0",
+  "description": "Extends Claude Code's status area with what it leaves out: output speed (tok/s), time to first token and prompt-cache hit rate, for the current turn and the whole session.",
+  "author": {
+    "name": "Ami0307",
+    "url": "https://github.com/Ami0307"
+  },
+  "homepage": "https://github.com/Ami0307/barkeep",
+  "repository": "https://github.com/Ami0307/barkeep",
   "license": "MIT",
-  "keywords": ["tokens", "speed", "prompt-cache", "cache-hit-rate", "status"],
+  "keywords": [
+    "status-bar",
+    "statusline",
+    "speed",
+    "prompt-cache",
+    "cache-hit-rate",
+    "tokens"
+  ],
   "types": "./types/index.d.ts",
   "userConfig": {
     "language": {
@@ -14,7 +24,11 @@
       "title": "Language",
       "description": "Label language: auto follows the system language, or pick one.",
       "default": "auto",
-      "options": ["auto", "en", "zh"]
+      "options": [
+        "auto",
+        "en",
+        "zh"
+      ]
     }
   }
 }

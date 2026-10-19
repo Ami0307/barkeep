@@ -1,6 +1,6 @@
-# tokscope
+# barkeep
 
-A Claude Code mod that puts the two numbers the built-in UI leaves out on one line above the prompt: **how fast the model is writing** and **how much of each request the prompt cache served**.
+barkeep extends Claude Code's status area with the readings it leaves out. Claude Code already shows context usage and plan limits; barkeep adds a line above the prompt with **how fast the model is writing** and **how much of each request the prompt cache served**.
 
 ```
 ▾ Last turn  82.4 tok/s  TTFT 1.3s · cache 96%    Session  75.1 tok/s · cache 91% · 23 requests · out 18.2k
@@ -16,33 +16,33 @@ A Claude Code mod that puts the two numbers the built-in UI leaves out on one li
 - Only requests in the main conversation are counted, not subagents.
 - Click `▾` to collapse the band to one short line, and `▸` to expand it again. The band stays hidden until the first request finishes.
 
-It draws in the terminal and in the Code tab of the Claude desktop app.
+barkeep draws in the terminal and in the Code tab of the Claude desktop app.
 
 ## Language
 
 Labels follow the system language: Chinese when the system language is Chinese, English otherwise. To pick one yourself, set the plugin's **Language** option to `en` or `zh` in the plugin's settings.
 
-To find the system language, tokscope reads the `LC_ALL`, `LC_MESSAGES` and `LANG` environment variables. When none is set, which is usual for apps started from the macOS Dock, it runs `defaults read -g AppleLanguages` once per session and uses the first language in that list.
+To find the system language, barkeep reads the `LC_ALL`, `LC_MESSAGES` and `LANG` environment variables. When none is set, which is usual for apps started from the macOS Dock, it runs `defaults read -g AppleLanguages` once per session and uses the first language in that list.
 
 ## Privacy
 
-tokscope reads only the token counts and timings Claude Code reports for each model request. It keeps them in memory for the current session, sends nothing over the network, and writes no files. Apart from the `defaults` command above, it runs no programs.
+barkeep reads only the token counts and timings Claude Code reports for each model request. It keeps them in memory for the current session, sends nothing over the network, and writes no files. Apart from the `defaults` command above, it runs no programs.
 
 ## Install
 
 At the prompt of a terminal session:
 
 ```
-/plugin install tokscope --marketplace Ami0307/tokscope
+/plugin install barkeep --marketplace Ami0307/barkeep
 ```
 
 From a shell:
 
 ```bash
-claude plugin install tokscope --marketplace Ami0307/tokscope
+claude plugin install barkeep --marketplace Ami0307/barkeep
 ```
 
-In the desktop app, where `/plugin` does not run: click **+** next to the prompt box, then **Plugins**, then **Add marketplace** with `Ami0307/tokscope`, then **Add plugin**.
+In the desktop app, where `/plugin` does not run: click **+** next to the prompt box, then **Plugins**, then **Add marketplace** with `Ami0307/barkeep`, then **Add plugin**.
 
 Answer `y` to add the marketplace, then choose the user scope so the band appears in every session.
 
