@@ -1,7 +1,7 @@
 import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
 
-import { firstAppleLanguage, fromLocale, LABELS } from './i18n'
+import { firstAppleLanguage, fromLocale, isLang, LABELS } from './i18n'
 import type { Lang } from './i18n'
 import { add, empty, fmtRate, fmtSeconds, fmtSpeed, fmtTokens, hitRate, rateColor, speed } from './stats'
 
@@ -28,8 +28,7 @@ const detectLang = async ($: EngineInterface): Promise<Lang> => {
 
 export const register: Register = (on, options) => {
   const chosen = options.language
-  let lang: Promise<Lang> | undefined =
-    chosen === 'en' || chosen === 'zh' ? Promise.resolve(chosen) : undefined
+  let lang: Promise<Lang> | undefined = isLang(chosen) ? Promise.resolve(chosen) : undefined
 
   // Time each main-loop model request: first streamed chunk to end is generation.
   on('turn.step', async function* ($, e, next) {

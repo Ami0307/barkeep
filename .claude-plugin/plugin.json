@@ -1,6 +1,6 @@
 {
   "name": "barkeep",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Extends Claude Code's status area with what it leaves out: output speed (tok/s), time to first token and prompt-cache hit rate, for the current turn and the whole session.",
   "author": {
     "name": "Ami0307",
@@ -22,12 +22,21 @@
     "language": {
       "type": "string",
       "title": "Language",
-      "description": "Label language: auto follows the system language, or pick one.",
+      "description": "Language of the labels. auto follows the system language. en English, zh-Hans Simplified Chinese, zh-Hant Traditional Chinese, ja Japanese, ko Korean, es Spanish, fr French, de German, pt Portuguese, it Italian, ru Russian.",
       "default": "auto",
       "options": [
         "auto",
         "en",
-        "zh"
+        "zh-Hans",
+        "zh-Hant",
+        "ja",
+        "ko",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "it",
+        "ru"
       ]
     }
   }

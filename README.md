@@ -20,9 +20,11 @@ barkeep draws in the terminal and in the Code tab of the Claude desktop app.
 
 ## Language
 
-Labels follow the system language: Chinese when the system language is Chinese, English otherwise. To pick one yourself, set the plugin's **Language** option to `en` or `zh` in the plugin's settings.
+Labels follow the system language. barkeep has labels in English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, French, German, Portuguese, Italian and Russian, and falls back to English for any other language.
 
-To find the system language, barkeep reads the `LC_ALL`, `LC_MESSAGES` and `LANG` environment variables. When none is set, which is usual for apps started from the macOS Dock, it runs `defaults read -g AppleLanguages` once per session and uses the first language in that list.
+To choose a language yourself, set the plugin's **Language** option: `auto` (the default) follows the system, or pick `en`, `zh-Hans`, `zh-Hant`, `ja`, `ko`, `es`, `fr`, `de`, `pt`, `it` or `ru`.
+
+To find the system language, barkeep reads the `LC_ALL`, `LC_MESSAGES` and `LANG` environment variables. When none is set, which is usual for apps started from the macOS Dock, it runs `defaults read -g AppleLanguages` once per session and uses the first language in that list. On other systems without those variables it uses English.
 
 ## Privacy
 
