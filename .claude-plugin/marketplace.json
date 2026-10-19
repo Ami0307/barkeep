@@ -1,0 +1,6 @@
+{
+  "name": "ami-mods",
+  "description": "Ami0307's Claude Code mods.",
+  "owner": { "name": "Ami0307" },
+  "plugins": [{ "name": "token-meter", "source": "./" }]
+}
