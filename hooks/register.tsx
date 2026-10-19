@@ -1,13 +1,36 @@
 import { atom, read, update } from 'claude-code'
-import type { Register } from 'claude-code'
+import type { EngineInterface, Register } from 'claude-code'
 
+import { firstAppleLanguage, fromLocale, LABELS } from './i18n'
+import type { Lang } from './i18n'
 import { add, empty, fmtRate, fmtSeconds, fmtSpeed, fmtTokens, hitRate, rateColor, speed } from './stats'
 
-const turn = atom({ plugin: 'token-meter', key: 'turn' } as const, null)
-const session = atom({ plugin: 'token-meter', key: 'session' } as const, null)
-const isCollapsed = atom({ plugin: 'token-meter', key: 'isCollapsed' } as const, false)
+const turn = atom({ plugin: 'tokscope', key: 'turn' } as const, null)
+const session = atom({ plugin: 'tokscope', key: 'session' } as const, null)
+const isCollapsed = atom({ plugin: 'tokscope', key: 'isCollapsed' } as const, false)
 
-export const register: Register = on => {
+// The system language: locale variables first, then macOS's preferred language list.
+const detectLang = async ($: EngineInterface): Promise<Lang> => {
+  const fromEnv =
+    fromLocale(await $.env.get('LC_ALL')) ??
+    fromLocale(await $.env.get('LC_MESSAGES')) ??
+    fromLocale(await $.env.get('LANG'))
+  if (fromEnv !== undefined) {
+    return fromEnv
+  }
+  try {
+    const { exitCode, stdout } = await $.process.run(['defaults', 'read', '-g', 'AppleLanguages'], { timeoutMs: 3000 })
+    return (exitCode === 0 ? fromLocale(firstAppleLanguage(stdout)) : undefined) ?? 'en'
+  } catch {
+    return 'en'
+  }
+}
+
+export const register: Register = (on, options) => {
+  const chosen = options.language
+  let lang: Promise<Lang> | undefined =
+    chosen === 'en' || chosen === 'zh' ? Promise.resolve(chosen) : undefined
+
   // Time each main-loop model request: first streamed chunk to end is generation.
   on('turn.step', async function* ($, e, next) {
     if (e.agentId !== undefined) {
@@ -61,10 +84,12 @@ export const register: Register = on => {
       return next(e)
     }
 
+    lang ??= detectLang($)
+    const L = LABELS[await lang]
     const { Box, Button, Text } = $.ui.resolve(e)
     const tRate = hitRate(t)
     const sRate = hitRate(s)
-    const label = e.props.isWorking ? '本轮' : '上一轮'
+    const label = e.props.isWorking ? L.turn : L.lastTurn
 
     if (await read($, isCollapsed)) {
       return (
@@ -85,18 +110,18 @@ export const register: Register = on => {
           <Box flexDirection="row" columnGap={1}>
             <Text dimColor>{label}</Text>
             <Text bold tabular>{fmtSpeed(speed(t))}</Text>
-            <Text dimColor tabular>首字 {fmtSeconds(t.firstTokenMs)}</Text>
+            <Text dimColor tabular>{L.firstToken} {fmtSeconds(t.firstTokenMs)}</Text>
             <Text dimColor>·</Text>
-            <Text dimColor>缓存</Text>
+            <Text dimColor>{L.cache}</Text>
             <Text bold tabular color={rateColor(tRate)}>{fmtRate(tRate)}</Text>
           </Box>
           <Box flexDirection="row" columnGap={1}>
-            <Text dimColor>本会话</Text>
+            <Text dimColor>{L.session}</Text>
             <Text tabular>{fmtSpeed(speed(s))}</Text>
             <Text dimColor>·</Text>
-            <Text dimColor>缓存</Text>
+            <Text dimColor>{L.cache}</Text>
             <Text tabular color={rateColor(sRate)}>{fmtRate(sRate)}</Text>
-            <Text dimColor tabular>· {s.steps} 次请求 · 输出 {fmtTokens(s.outputTokens)}</Text>
+            <Text dimColor tabular>· {L.requests(s.steps)} · {L.output} {fmtTokens(s.outputTokens)}</Text>
           </Box>
         </Box>
       </Box>

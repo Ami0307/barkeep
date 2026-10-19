@@ -1,11 +1,20 @@
 {
-  "name": "token-meter",
-  "version": "0.1.0",
-  "description": "A one-line band above the prompt: output speed (tok/s), time to first token and prompt-cache hit rate, for the last turn and the session.",
+  "name": "tokscope",
+  "version": "0.2.0",
+  "description": "One line above the prompt with output speed (tok/s), time to first token and prompt-cache hit rate, for the current turn and the whole session.",
   "author": { "name": "Ami0307", "url": "https://github.com/Ami0307" },
-  "homepage": "https://github.com/Ami0307/claude-token-meter",
-  "repository": "https://github.com/Ami0307/claude-token-meter",
+  "homepage": "https://github.com/Ami0307/tokscope",
+  "repository": "https://github.com/Ami0307/tokscope",
   "license": "MIT",
-  "keywords": ["tokens", "cache", "speed", "status", "usage"],
-  "types": "./types/index.d.ts"
+  "keywords": ["tokens", "speed", "prompt-cache", "cache-hit-rate", "status"],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "language": {
+      "type": "string",
+      "title": "Language",
+      "description": "Label language: auto follows the system language, or pick one.",
+      "default": "auto",
+      "options": ["auto", "en", "zh"]
+    }
+  }
 }

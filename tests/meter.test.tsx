@@ -1,5 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
+import { firstAppleLanguage, fromLocale, LABELS } from '../hooks/i18n'
 import { add, empty, fmtRate, fmtSpeed, hitRate, rateColor, speed } from '../hooks/stats'
 
 const step = {
@@ -10,6 +11,8 @@ const step = {
   cacheRead: 900,
   cacheWrite: 90,
 }
+
+const BAND = { component: 'AbovePrompt', props: { hasSurvey: false, isWorking: false, maxRows: 10 } as never } as const
 
 test('speed and hit rate add up across steps', async () => {
   const s = add(add(empty('t1'), step), step)
@@ -23,13 +26,26 @@ test('speed and hit rate add up across steps', async () => {
   expect(hitRate(empty(''))).toBe(null)
 })
 
+test('labels follow the system language', async () => {
+  expect(fromLocale('zh_CN.UTF-8')).toBe('zh')
+  expect(fromLocale('zh-Hant-TW')).toBe('zh')
+  expect(fromLocale('en_US.UTF-8')).toBe('en')
+  expect(fromLocale('ja-JP')).toBe('en')
+  expect(fromLocale('C')).toBe(undefined)
+  expect(fromLocale('')).toBe(undefined)
+  expect(firstAppleLanguage('(\n    "zh-Hans-CN",\n    "en-US"\n)\n')).toBe('zh-Hans-CN')
+  expect(firstAppleLanguage('(\n    en,\n    fr\n)\n')).toBe('en')
+  expect(LABELS.en.requests(1)).toBe('1 request')
+  expect(LABELS.en.requests(3)).toBe('3 requests')
+})
+
 test('before any request the band stays out of the way', async ($, on) => {
   on('ui.render', ($, e) => {
     const { Box } = $.ui.resolve(e)
     return <Box key="engine" />
   })
   for (const surface of ['terminal', 'desktop'] as const) {
-    const ui = await $.ui.mount({ plugin: 'token-meter', surface, component: 'AbovePrompt', props: { hasSurvey: false, isWorking: false, maxRows: 10 } as never })
+    const ui = await $.ui.mount({ plugin: 'tokscope', surface, ...BAND })
     expect(await ui.find({ type: 'Text', text: /tok\/s/ })).toBeUndefined()
     await ui.unmount()
   }
