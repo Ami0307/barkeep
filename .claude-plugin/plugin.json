@@ -8,6 +8,9 @@
   },
   "homepage": "https://github.com/Ami0307/barkeep",
   "repository": "https://github.com/Ami0307/barkeep",
+  "documentationUrl": "https://github.com/Ami0307/barkeep#readme",
+  "supportUrl": "https://github.com/Ami0307/barkeep/issues",
+  "privacyPolicyUrl": "https://github.com/Ami0307/barkeep#privacy",
   "license": "MIT",
   "keywords": [
     "status-bar",
